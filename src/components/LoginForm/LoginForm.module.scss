@@ -1,0 +1,127 @@
+@mixin flex-column-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.valid {
+  color: var(--success) !important;
+}
+.warning {
+  color: var(--danger) !important;
+}
+
+.form-wrapper {
+  @include flex-column-center;
+  line-height: 1.5;
+
+  .login-header {
+    @include flex-column-center;
+    margin: 55px 0px 60px;
+
+    .title {
+      font-size: 12px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 5px;
+      color: #212519;
+    }
+
+    img {
+      height: 48px;
+    }
+  }
+
+  .form-container {
+    width: 440px;
+    margin: 0px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .form-input {
+      margin-bottom: 30px;
+
+      label {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 6px;
+        color: var(--gray);
+        padding-left: 15px;
+        font-weight: bold;
+      }
+
+      .input-group {
+        @include flex-column-center;
+        position: relative;
+
+        input {
+          width: 100%;
+          padding: 10px 35px 10px 20px;
+          border: 1px solid var(--gray);
+          outline: none;
+          font-size: 15px;
+          line-height: 1.55;
+          color: var(--dark);
+
+          &::placeholder {
+            color: var(--gray);
+          }
+
+          &:focus {
+            border: 1px solid var(--blue);
+          }
+        }
+
+        i {
+          @include flex-column-center;
+          font-size: 12px;
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          right: 10px;
+          padding: 5px;
+          border-radius: 50%;
+          color: var(--success);
+          background-color: (var(--success-background));
+        }
+
+        p {
+          position: absolute;
+          bottom: -20px;
+          left: 0;
+          font-size: 11px;
+          padding: 0px 15px;
+        }
+      }
+    }
+
+    .button-submit {
+      margin-bottom: 30px;
+      width: 100%;
+      height: 45px;
+      border-radius: 3px;
+      padding: 4.5px 9px;
+      background-color: var(--red);
+      border: none;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.submitting {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  a {
+    margin-top: 6px;
+    padding: 0 15px;
+    text-align: center;
+    color: var(--danger);
+  }
+}

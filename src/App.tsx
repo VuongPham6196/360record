@@ -1,25 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+
+import { IRoute } from './constants/interface';
+
+import Home from './pages/Home';
+
+import Login from './pages/Login';
+import { useSelector } from 'react-redux';
 
 function App() {
+  const isLogged = useSelector((state: any) => state.auth.loginStatus);
+
+  const PublicRoutes: IRoute[] = [
+    { path: '/', component: Home },
+    { path: '/login', component: Login },
+  ];
+
+  const ProtectedRoute = ({ children }: any): any => {
+    if (!isLogged) {
+      return <Navigate to={'/login'} replace />;
+    }
+    return <div>{children}</div>;
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        ></Route>
+        <Route
+          path="/login"
+          element={isLogged ? <Navigate to={'/'} /> : <Login />}
+        ></Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
