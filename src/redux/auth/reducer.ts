@@ -1,8 +1,10 @@
+import { cookies } from 'api/httpClient';
 import { authActionTypes } from './actions';
 
 const initialState = {
   loading: false,
-  loginStatus: false,
+  token: localStorage.getItem('token') || cookies.get('token') || null,
+  errorMsg: null,
 };
 
 const loginReducer = (state = initialState, action: any) => {
@@ -11,11 +13,26 @@ const loginReducer = (state = initialState, action: any) => {
       return {
         ...state,
         loading: true,
+        errorMsg: null,
       };
     case authActionTypes.GET_AUTH_REQUEST_SUCCESS:
-      return { ...state, loading: false, loginStatus: action.payload };
+      const { token } = action.payload.data.authenticate;
+      const { remember } = action.payload;
+
+      if (remember) {
+        localStorage.setItem('token', token);
+      } else {
+        cookies.set('token', token);
+      }
+      return { ...state, loading: false, token: token, errorMsg: null };
+
     case authActionTypes.GET_AUTH_REQUEST_FAILED:
-      return { ...state, loading: false, loginStatus: action.payload };
+      return {
+        ...state,
+        loading: false,
+        token: null,
+        errorMsg: action.payload,
+      };
     default:
       return state;
   }

@@ -6,4 +6,5 @@ export interface IRoute {
 export interface IFormInputs {
   email: string;
   password: string;
+  remember: boolean;
 }

@@ -16,10 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "plugins": [{ "name": "typescript-plugin-css-modules" }],
-    "baseUrl": "./src",
-    "paths": {
-      "@components/*": ["./components/*"]
-    }
+    "baseUrl": "./src"
   },
-  "include": ["src"]
+  "include": ["src", "./src/index.d.ts"]
 }

@@ -7,17 +7,17 @@ import Home from './pages/Home';
 
 import Login from './pages/Login';
 import { useSelector } from 'react-redux';
+import { getStorageToken } from 'api/httpClient';
+import { useEffect, useState } from 'react';
+import Company from 'components/Company/Company';
+import Companies from 'pages/Companies';
 
 function App() {
-  const isLogged = useSelector((state: any) => state.auth.loginStatus);
-
-  const PublicRoutes: IRoute[] = [
-    { path: '/', component: Home },
-    { path: '/login', component: Login },
-  ];
+  const token = useSelector((state: any) => state.auth.token);
+  console.log(token);
 
   const ProtectedRoute = ({ children }: any): any => {
-    if (!isLogged) {
+    if (!token) {
       return <Navigate to={'/login'} replace />;
     }
     return <div>{children}</div>;
@@ -26,17 +26,27 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/">
+          <Route
+            index
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="companies"
+            element={
+              <ProtectedRoute>
+                <Companies />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
         <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        ></Route>
-        <Route
-          path="/login"
-          element={isLogged ? <Navigate to={'/'} /> : <Login />}
+          path={'/login'}
+          element={token ? <Navigate to={'/'} /> : <Login />}
         ></Route>
       </Routes>
     </BrowserRouter>

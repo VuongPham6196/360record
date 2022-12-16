@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,17 +13,17 @@ import LoadingSpinner from '../UI/LoadingSpinner/LoadingSpinner';
 
 const LoginForm: React.FC = (props): JSX.Element => {
   const [showLogin, setShowLogin] = useState(false);
-  const dispatch = useDispatch();
-  const isLogged = useSelector((state: any) => state.auth.loginStatus);
-  const isLoading = useSelector((state: any) => state.auth.loading);
 
-  console.log(isLogged);
+  const dispatch = useDispatch();
+
+  const isLoading = useSelector((state: any) => state.auth.loading);
+  const errorMsg = useSelector((state: any) => state.auth.errorMsg);
 
   //Validate schema declare
   const schema = yup
     .object({
       email: yup.string().email().required('Please fill in your email address'),
-      password: yup.string().required('Please fill in your password').min(8),
+      password: yup.string().required('Please fill in your password'),
     })
     .required();
 
@@ -31,29 +31,27 @@ const LoginForm: React.FC = (props): JSX.Element => {
   const {
     register,
     handleSubmit,
-    getValues,
+    getFieldState,
     formState: { errors, touchedFields },
   } = useForm<IFormInputs>({
     mode: 'onBlur',
-    reValidateMode: 'onChange',
     resolver: yupResolver(schema),
   });
 
   //continurHandle
   const handleContinue = () => {
-    const emailValue = getValues().email;
-    if (!!emailValue && !errors.email) {
+    if (!getFieldState('email').invalid) {
       setShowLogin(true);
     }
   };
 
   //Submit event
-  const onValidSubmit = (data: IFormInputs) => {
+  const onValidSubmit = async (data: IFormInputs) => {
     dispatch(getAuth(data));
   };
 
   const onInvalidSubmit = () => {
-    alert('Validation failed!');
+    // alert('Validation failed!');
   };
 
   //Input validate state
@@ -63,12 +61,8 @@ const LoginForm: React.FC = (props): JSX.Element => {
       : !!errors.email && !!touchedFields.email
       ? styles.warning
       : styles.valid;
-  const passwordState =
-    touchedFields.password === undefined
-      ? ''
-      : !!errors.password && !!touchedFields.password
-      ? styles.warning
-      : styles.valid;
+
+  const passwordStateClasses = !!errors.password ? styles.warning : '';
 
   return (
     <div className={styles['form-wrapper']}>
@@ -84,45 +78,67 @@ const LoginForm: React.FC = (props): JSX.Element => {
         className={styles['form-container']}
         onSubmit={handleSubmit(onValidSubmit, onInvalidSubmit)}
       >
+        {/* EMAIL input */}
         <div className={styles['form-input']}>
           <label className={emailStateClasses} htmlFor="email">
             Email address
           </label>
           <div className={styles['input-group']}>
             <input id="email" {...register('email')} autoFocus />
-            <i className={`fa-solid fa-check ${emailStateClasses}`}></i>
-            <p className={styles.warning}>*{errors.email?.message}</p>
+            {!errors.email && touchedFields.email && (
+              <i className={`fa-solid fa-check ${styles.valid}`}></i>
+            )}
+            {errors.email && (
+              <p className={styles.warning}>*{errors.email?.message}</p>
+            )}
           </div>
         </div>
 
         {showLogin && (
           <>
+            {/* PASSWORD input */}
             <div className={styles['form-input']}>
-              <label className={passwordState} htmlFor="password">
+              <label className={passwordStateClasses} htmlFor="password">
                 Password
               </label>
               <div className={styles['input-group']}>
-                <input id="password" {...register('password')} />
-                <i className={`fa-solid  fa-check ${passwordState}`}></i>
-                <p className={styles.warning}>*{errors.password?.message}</p>
+                <input
+                  id="password"
+                  type="password"
+                  {...register('password')}
+                />
+                {errors.password && (
+                  <p className={styles.warning}>*{errors.password?.message}</p>
+                )}
               </div>
             </div>
+
+            {/* REMEMBER input */}
+            <div className={styles['remember-group']}>
+              <input id="remember" type="checkbox" {...register('remember')} />
+
+              <label htmlFor="password">Remember me</label>
+            </div>
+
+            {/* LOGIN button */}
             <button
               className={
                 isLoading
-                  ? `${styles['button-submit']} ${styles['submitting']}`
-                  : styles['button-submit']
+                  ? `${styles['button-group']} ${styles['submitting']}`
+                  : styles['button-group']
               }
             >
               {isLoading && <LoadingSpinner />}
               <span>SIGN IN</span>
+              {errorMsg && <p className={styles.warning}>{errorMsg}</p>}
             </button>
           </>
         )}
 
+        {/* CONTINUE button */}
         {!showLogin && (
           <button
-            className={styles['button-submit']}
+            className={styles['button-group']}
             type="button"
             onClick={handleContinue}
           >

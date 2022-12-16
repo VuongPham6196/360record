@@ -1,0 +1,14 @@
+.default-layout {
+  display: flex;
+  position: relative;
+
+  .sidebar-wrapper {
+    width: 240px;
+  }
+
+  .content-wrapper {
+    background-color: #f0f5fa;
+    width: calc(100vw - 240px);
+    padding: 30px;
+  }
+}
