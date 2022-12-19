@@ -1,4 +1,5 @@
 import { companiesActionTypes } from './actions';
+import { cookies } from 'api/httpClient';
 
 //initial pageInfo
 const initPageInfo = {

@@ -17,7 +17,7 @@ const Company: React.FC = (): JSX.Element => {
   const PAGEINFO = useSelector((state: any) => state.companies.pageInfo);
 
   useEffect(() => {
-    async function getCompaniesData() {
+    function getCompaniesData() {
       dispatch(getCompanies({ first: 20 }));
     }
     getCompaniesData();
@@ -42,10 +42,6 @@ const Company: React.FC = (): JSX.Element => {
       })
     );
   }
-
-  console.log(COMPANIES);
-  console.log('hasPrev:' + PAGEINFO.hasPreviousPage);
-  console.log('hasNext:' + PAGEINFO.hasNextPage);
 
   return (
     <div className={styles.container}>

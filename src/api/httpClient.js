@@ -4,38 +4,19 @@ import Cookies from 'universal-cookie';
 axios.defaults.headers['Content-Type'] = 'application/json';
 axios.defaults.headers['Accept'] = 'application/json';
 
-const STORAGE_TOKEN = 'jwt';
+const STORAGE_TOKEN = 'token';
 const GRAPHQL_ENDPOINT = 'http://192.168.1.189:3030/v2';
-const JWT =
-  'eyJraWQiOiJNbDB1RlREbmFvY3Yxc3E2MVZTYTZRIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIyMTI5IiwiaWF0IjoxNjY2MzIxODk3fQ.ii8omCBBUuoReVccoDHJEd-Wu_lQPUVb8BhyU8OeC3pX3axe2S0WM33X0TXmybKWrMPTH-QSt9VwtQm0BOppvg';
 
 export const cookies = new Cookies();
 
-export const getStorageToken = async () => {
-  try {
-    const token =
-      (await localStorage.getItem(STORAGE_TOKEN)) ||
-      (await cookies.get(STORAGE_TOKEN));
-    return token;
-  } catch (error) {
-    return console.log(error);
-  }
+export const getStorageToken = () => {
+  return localStorage.getItem(STORAGE_TOKEN) ?? cookies.get(STORAGE_TOKEN);
 };
 
-export const getAuthorizationToken = async () => {
+const getAuthorizationToken = async () => {
   const headers = {};
-
-  try {
-    const token = (await getStorageToken()) || JWT;
-
-    if (token) {
-      return { ...headers, ...{ Authorization: `Token ${token}` } }; //xem laij cho nay
-    } else {
-      return headers;
-    }
-  } catch (e) {
-    return Promise.reject(new Error(e));
-  }
+  const token = getStorageToken();
+  return { ...headers, ...(token && { Authorization: `Token ${token}` }) };
 };
 
 export const httpPost = (data) => {
@@ -51,8 +32,6 @@ export const httpPost = (data) => {
 };
 
 export const login = (username, password) => {
-  console.log('login called');
-
   const query = `
     mutation(
       $username: String!,
@@ -84,7 +63,6 @@ export const login = (username, password) => {
     .replace(/\s+/gm, ' ');
 
   const variables = { username, password };
-  console.log(variables);
 
   return httpPost({ query, variables });
 };

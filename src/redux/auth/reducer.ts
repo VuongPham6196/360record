@@ -27,6 +27,8 @@ const loginReducer = (state = initialState, action: any) => {
       return { ...state, loading: false, token: token, errorMsg: null };
 
     case authActionTypes.GET_AUTH_REQUEST_FAILED:
+      localStorage.removeItem('token');
+      cookies.remove('token');
       return {
         ...state,
         loading: false,

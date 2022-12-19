@@ -7,14 +7,10 @@ import Home from './pages/Home';
 
 import Login from './pages/Login';
 import { useSelector } from 'react-redux';
-import { getStorageToken } from 'api/httpClient';
-import { useEffect, useState } from 'react';
-import Company from 'components/Company/Company';
 import Companies from 'pages/Companies';
 
 function App() {
   const token = useSelector((state: any) => state.auth.token);
-  console.log(token);
 
   const ProtectedRoute = ({ children }: any): any => {
     if (!token) {

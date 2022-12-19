@@ -1,12 +1,12 @@
 import { getCOMPANIES } from 'api/httpClient';
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { companiesActionTypes } from './actions';
+import { authActionTypes } from 'redux/auth/actions';
 
 function* fetchCompanies(action) {
-  console.log('companies called');
-
+  let respone;
   try {
-    const respone = yield call(getCOMPANIES, action.payload);
+    respone = yield call(getCOMPANIES, action.payload);
 
     yield put({
       type: companiesActionTypes.GET_COMPANIES_REQUEST_SUCCESS,
@@ -17,12 +17,14 @@ function* fetchCompanies(action) {
       type: companiesActionTypes.GET_COMPANIES_REQUEST_FAILED,
       payload: 'Some thing went wrong. Please try again later!',
     });
+    yield put({
+      type: authActionTypes.GET_AUTH_REQUEST_FAILED,
+      payload: respone,
+    });
   }
 }
 
 function* fetchMoreCompanies(action) {
-  console.log('get more companies called');
-
   try {
     const respone = yield call(getCOMPANIES, action.payload);
 
@@ -33,6 +35,10 @@ function* fetchMoreCompanies(action) {
   } catch (error) {
     yield put({
       type: companiesActionTypes.GET_COMPANIES_REQUEST_FAILED,
+      payload: 'Some thing went wrong. Please try again later!',
+    });
+    yield put({
+      type: authActionTypes.GET_AUTH_REQUEST_FAILED,
       payload: 'Some thing went wrong. Please try again later!',
     });
   }
