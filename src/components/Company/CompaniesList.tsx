@@ -1,16 +1,14 @@
-import styles from './Company.module.scss';
+import styles from './CompaniesList.module.scss';
 
 import AddImage from 'assets/icons/add.svg';
 import EditImage from '../../assets/images/Edit-filter.png';
-import UpIcon from 'assets/icons/up.svg';
-import UpActiveIcon from 'assets/icons/up-active.svg';
-import DownIcon from 'assets/icons/down.svg';
-import DownActiveIcon from 'assets/icons/down-active.svg';
-import { useEffect, useState } from 'react';
+
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCompanies, getMoreCompanies } from 'redux/companies/actions';
+import SortArrow from 'components/UI/SortArrow/SortArrow';
 
-const Company: React.FC = (): JSX.Element => {
+const CompaniesList: React.FC = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const COMPANIES = useSelector((state: any) => state.companies.companies);
@@ -49,7 +47,8 @@ const Company: React.FC = (): JSX.Element => {
       <div className={styles.header}>
         <h2>Companies</h2>
         <button>
-          <img src={AddImage} /> CREATE NEW COMPANY
+          <img src={AddImage} alt="" />
+          CREATE NEW COMPANY
         </button>
       </div>
 
@@ -71,13 +70,8 @@ const Company: React.FC = (): JSX.Element => {
               <tr>
                 <th>
                   <div>
-                    <span> NAME</span>
-                    <span className={styles.indicator}>
-                      <img src={UpIcon} alt="" />
-                      <img src={UpActiveIcon} alt="" />
-                      <img src={DownIcon} alt="" />
-                      <img src={DownActiveIcon} alt="" />
-                    </span>
+                    <span>NAME</span>
+                    <SortArrow />
                     <span className={styles.dropdown}>
                       <img src={EditImage} alt="" />
                     </span>
@@ -87,15 +81,17 @@ const Company: React.FC = (): JSX.Element => {
             </thead>
             <tbody>
               {COMPANIES.map((company: any) => {
-                if (company.node) {
-                  return (
-                    <tr key={company.node.id}>
+                return (
+                  company && (
+                    <tr key={company.id}>
                       <td>
-                        <a href="#">{company.node.name}</a>
+                        <a href={`/dashboard/companies/${company.id}`}>
+                          {company.name}
+                        </a>
                       </td>
                     </tr>
-                  );
-                }
+                  )
+                );
               })}
             </tbody>
           </table>
@@ -114,12 +110,12 @@ const Company: React.FC = (): JSX.Element => {
                 </th>
                 <th>
                   <div>
-                    <span> REGIONS</span>
+                    <span>REGIONS</span>
                   </div>
                 </th>
                 <th>
                   <div>
-                    <span> PLAN LEVEL</span>
+                    <span>PLAN LEVEL</span>
                     <span className={styles.dropdown}>
                       <img src={EditImage} alt="" />
                     </span>
@@ -127,7 +123,7 @@ const Company: React.FC = (): JSX.Element => {
                 </th>
                 <th>
                   <div>
-                    <span> PRODUCT PLAN</span>
+                    <span>PRODUCT PLAN</span>
                     <span className={styles.dropdown}>
                       <img src={EditImage} alt="" />
                     </span>
@@ -135,27 +131,27 @@ const Company: React.FC = (): JSX.Element => {
                 </th>
                 <th>
                   <div>
-                    <span> MRR</span>
+                    <span>MRR</span>
                   </div>
                 </th>
                 <th>
                   <div>
-                    <span> LOCATIONS</span>
+                    <span>LOCATIONS</span>
                   </div>
                 </th>
                 <th>
                   <div>
-                    <span> USERS</span>
+                    <span>USERS</span>
                   </div>
                 </th>
                 <th>
                   <div>
-                    <span> INSPECTIONS</span>
+                    <span>INSPECTIONS</span>
                   </div>
                 </th>
                 <th>
                   <div>
-                    <span> IS DEMO?</span>
+                    <span>IS DEMO?</span>
                     <span className={styles.dropdown}>
                       <img src={EditImage} alt="" />
                     </span>
@@ -163,7 +159,7 @@ const Company: React.FC = (): JSX.Element => {
                 </th>
                 <th>
                   <div>
-                    <span> IS ACTIVE?</span>
+                    <span>IS ACTIVE?</span>
                     <span className={styles.dropdown}>
                       <img src={EditImage} alt="" />
                     </span>
@@ -171,84 +167,94 @@ const Company: React.FC = (): JSX.Element => {
                 </th>
                 <th>
                   <div>
-                    <span> MAX LOCATIONS</span>
+                    <span>MAX LOCATIONS</span>
                   </div>
                 </th>
                 <th>
                   <div>
-                    <span> MAX USERS</span>
+                    <span>MAX USERS</span>
                   </div>
                 </th>
                 <th>
                   <div>
-                    <span> CREATED AT</span>
+                    <span>CREATED AT</span>
                   </div>
                 </th>
                 <th>
                   <div>
-                    <span> UPDATED AT</span>
+                    <span>UPDATED AT</span>
+                    <SortArrow />
                   </div>
                 </th>
                 <th>
                   <div>
-                    <span> COMPANY ID</span>
+                    <span>LAST INSPECTION</span>
+                    <SortArrow />
+                  </div>
+                </th>
+                <th>
+                  <div>
+                    <span>COMPANY ID</span>
                   </div>
                 </th>
               </tr>
             </thead>
             <tbody>
               {COMPANIES.map((company: any) => {
-                if (company.node) {
-                  return (
-                    <tr key={company.node.id}>
+                return (
+                  company && (
+                    <tr key={company.id}>
                       <td>
-                        <span>{company.node.industry}</span>
+                        <span>{company.industry ?? ''}</span>
                       </td>
                       <td>
-                        <span>{company.node.regions.edges.length}</span>
+                        <span>{company.regionCount ?? ''}</span>
                       </td>
                       <td>
-                        <span>{company.node.planLevel}</span>
+                        <span>{company.planLevel ?? ''}</span>
                       </td>
                       <td>
-                        <span>{company.node.productPlan}</span>
+                        <span>{company.productPlan ?? ''}</span>
                       </td>
                       <td>
-                        <span>{company.node.monthlyRecurringRevenue}</span>
+                        <span>${company.monthlyRecurringRevenue ?? ''}</span>
                       </td>
                       <td>
-                        <span>{company.node.locations.edges.length}</span>
+                        <span>{company.locationCount ?? ''}</span>
                       </td>
                       <td>
-                        <span>{company.node.users.edges.length}</span>
+                        <span>{company.billableUserCount ?? ''}</span>
                       </td>
                       <td>
-                        <span>{company.node.inspections.edges.length}</span>
+                        <span>{company.inspectionCount ?? 0}</span>
                       </td>
                       <td>
-                        <span>{company.node.demo}</span>
+                        <span>{company.demo.toString() ?? ''}</span>
                       </td>
                       <td>
-                        <span>{company.node.active.toString()}</span>
+                        <span>{company.active.toString() ?? ''}</span>
                       </td>
                       <td>
-                        <span>{company.node.maxLocations}</span>
+                        <span>{company.maxLocations ?? ''}</span>
                       </td>
                       <td>
-                        <span>{company.node.maxUsers}</span>
+                        <span>{company.maxUsers ?? ''}</span>
                       </td>
                       <td>
-                        <span>{company.node.createAt}</span>
+                        <span>{company.createdAt ?? ''}</span>
                       </td>
                       <td>
-                        <span>{company.node.updatedAt}</span>
+                        <span>{company.updatedAt ?? ''}</span>
                       </td>
                       <td>
-                        <span>{company.node.id}</span>
+                        <span>{company.lastInspectionAt ?? ''}</span>
+                      </td>
+                      <td>
+                        <span>{company.id ?? ''}</span>
                       </td>
                     </tr>
-                  );
-                }
+                  )
+                );
               })}
             </tbody>
           </table>
@@ -275,4 +281,4 @@ const Company: React.FC = (): JSX.Element => {
   );
 };
 
-export default Company;
+export default CompaniesList;

@@ -1,4 +1,4 @@
-import { companiesActionTypes } from './actions';
+import { locationsActionTypes } from './actions';
 
 //initial pageInfo
 const initPageInfo = {
@@ -10,31 +10,29 @@ const initPageInfo = {
 
 const initialState = {
   loading: false,
-  companies: [],
+  locations: [],
   pageInfo: initPageInfo,
   errorMsg: null,
 };
 
-const companiesReducer = (state = initialState, action: any) => {
+const locationsReducer = (state = initialState, action: any) => {
   switch (action.type) {
-    case companiesActionTypes.GET_COMPANIES_REQUEST:
+    case locationsActionTypes.GET_LOCATIONS_REQUEST:
       return {
         ...state,
         loading: true,
         errorMsg: null,
       };
-    case companiesActionTypes.GET_COMPANIES_REQUEST_SUCCESS:
+    case locationsActionTypes.GET_LOCATIONS_REQUEST_SUCCESS:
       return {
         ...state,
         loading: false,
-        companies: action.payload.edges.map((item: any) => item.node),
+        locations: action.payload.edges.map((item: any) => item.node),
         pageInfo: action.payload.pageInfo,
         errorMsg: null,
       };
 
-    case companiesActionTypes.GET_MORECOMPANIES_REQUEST_SUCCESS:
-      console.log(action.payload);
-
+    case locationsActionTypes.GET_MORELOCATIONS_REQUEST_SUCCESS:
       // Update pageInfo when concat companies array
       const { pageInfo } = state;
       const updatedPageInfo = {
@@ -46,18 +44,18 @@ const companiesReducer = (state = initialState, action: any) => {
       return {
         ...state,
         loading: false,
-        companies: state.companies.concat(
+        locations: state.locations.concat(
           action.payload.edges.map((item: any) => item.node)
         ),
         pageInfo: updatedPageInfo,
         errorMsg: null,
       };
 
-    case companiesActionTypes.GET_COMPANIES_REQUEST_FAILED:
+    case locationsActionTypes.GET_LOCATIONS_REQUEST_FAILED:
       return {
         ...state,
         loading: false,
-        companies: [],
+        locations: [],
         pageInfo: initPageInfo,
         errorMsg: action.payload,
       };
@@ -66,4 +64,4 @@ const companiesReducer = (state = initialState, action: any) => {
   }
 };
 
-export default companiesReducer;
+export default locationsReducer;

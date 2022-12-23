@@ -1,41 +1,39 @@
-import { companiesActionTypes } from './actions';
+import { inspectionsActionTypes } from './actions';
 
 //initial pageInfo
 const initPageInfo = {
+  startCursor: null,
   endCursor: null,
   hasNextPage: false,
   hasPreviousPage: false,
-  startCursor: null,
 };
 
 const initialState = {
   loading: false,
-  companies: [],
+  inspections: [],
   pageInfo: initPageInfo,
   errorMsg: null,
 };
 
-const companiesReducer = (state = initialState, action: any) => {
+const inspectionsReducer = (state = initialState, action: any) => {
   switch (action.type) {
-    case companiesActionTypes.GET_COMPANIES_REQUEST:
+    case inspectionsActionTypes.GET_INSPECTIONS_REQUEST:
       return {
         ...state,
         loading: true,
         errorMsg: null,
       };
-    case companiesActionTypes.GET_COMPANIES_REQUEST_SUCCESS:
+    case inspectionsActionTypes.GET_INSPECTIONS_REQUEST_SUCCESS:
       return {
         ...state,
         loading: false,
-        companies: action.payload.edges.map((item: any) => item.node),
+        inspections: action.payload.edges.map((item: any) => item.node),
         pageInfo: action.payload.pageInfo,
         errorMsg: null,
       };
 
-    case companiesActionTypes.GET_MORECOMPANIES_REQUEST_SUCCESS:
-      console.log(action.payload);
-
-      // Update pageInfo when concat companies array
+    case inspectionsActionTypes.GET_MOREINSPECTIONS_REQUEST_SUCCESS:
+      // Update pageInfo when concat INSPECTIONS array
       const { pageInfo } = state;
       const updatedPageInfo = {
         ...pageInfo,
@@ -46,18 +44,18 @@ const companiesReducer = (state = initialState, action: any) => {
       return {
         ...state,
         loading: false,
-        companies: state.companies.concat(
+        inspections: state.inspections.concat(
           action.payload.edges.map((item: any) => item.node)
         ),
         pageInfo: updatedPageInfo,
         errorMsg: null,
       };
 
-    case companiesActionTypes.GET_COMPANIES_REQUEST_FAILED:
+    case inspectionsActionTypes.GET_INSPECTIONS_REQUEST_FAILED:
       return {
         ...state,
         loading: false,
-        companies: [],
+        inspections: [],
         pageInfo: initPageInfo,
         errorMsg: action.payload,
       };
@@ -66,4 +64,4 @@ const companiesReducer = (state = initialState, action: any) => {
   }
 };
 
-export default companiesReducer;
+export default inspectionsReducer;

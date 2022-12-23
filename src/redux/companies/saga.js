@@ -30,7 +30,7 @@ function* fetchMoreCompanies(action) {
 
     yield put({
       type: companiesActionTypes.GET_MORECOMPANIES_REQUEST_SUCCESS,
-      payload: { ...respone.data.companies },
+      payload: respone.data.companies,
     });
   } catch (error) {
     yield put({

@@ -15,6 +15,7 @@ const LoginForm: React.FC = (props): JSX.Element => {
   const [showLogin, setShowLogin] = useState(false);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const isLoading = useSelector((state: any) => state.auth.loading);
   const errorMsg = useSelector((state: any) => state.auth.errorMsg);
@@ -22,7 +23,10 @@ const LoginForm: React.FC = (props): JSX.Element => {
   //Validate schema declare
   const schema = yup
     .object({
-      email: yup.string().email().required('Please fill in your email address'),
+      email: yup
+        .string()
+        .email('Please fill in a valid email address')
+        .required('Please fill in your email address'),
       password: yup.string().required('Please fill in your password'),
     })
     .required();
@@ -48,6 +52,7 @@ const LoginForm: React.FC = (props): JSX.Element => {
   //Submit event
   const onValidSubmit = async (data: IFormInputs) => {
     dispatch(getAuth(data));
+    navigate(-1);
   };
 
   const onInvalidSubmit = () => {
@@ -76,7 +81,7 @@ const LoginForm: React.FC = (props): JSX.Element => {
 
       <form
         className={styles['form-container']}
-        onSubmit={handleSubmit(onValidSubmit, onInvalidSubmit)}
+        onSubmit={handleSubmit(onValidSubmit)}
       >
         {/* EMAIL input */}
         <div className={styles['form-input']}>
@@ -84,7 +89,12 @@ const LoginForm: React.FC = (props): JSX.Element => {
             Email address
           </label>
           <div className={styles['input-group']}>
-            <input id="email" {...register('email')} autoFocus />
+            <input
+              id="email"
+              {...register('email')}
+              autoFocus
+              disabled={isLoading}
+            />
             {!errors.email && touchedFields.email && (
               <i className={`fa-solid fa-check ${styles.valid}`}></i>
             )}
@@ -106,6 +116,7 @@ const LoginForm: React.FC = (props): JSX.Element => {
                   id="password"
                   type="password"
                   {...register('password')}
+                  disabled={isLoading}
                 />
                 {errors.password && (
                   <p className={styles.warning}>*{errors.password?.message}</p>
@@ -115,7 +126,12 @@ const LoginForm: React.FC = (props): JSX.Element => {
 
             {/* REMEMBER input */}
             <div className={styles['remember-group']}>
-              <input id="remember" type="checkbox" {...register('remember')} />
+              <input
+                disabled={isLoading}
+                id="remember"
+                type="checkbox"
+                {...register('remember')}
+              />
 
               <label htmlFor="password">Remember me</label>
             </div>
@@ -127,6 +143,7 @@ const LoginForm: React.FC = (props): JSX.Element => {
                   ? `${styles['button-group']} ${styles['submitting']}`
                   : styles['button-group']
               }
+              disabled={isLoading}
             >
               {isLoading && <LoadingSpinner />}
               <span>SIGN IN</span>

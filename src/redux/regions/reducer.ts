@@ -1,4 +1,4 @@
-import { companiesActionTypes } from './actions';
+import { regionsActionTypes } from './actions';
 
 //initial pageInfo
 const initPageInfo = {
@@ -10,32 +10,32 @@ const initPageInfo = {
 
 const initialState = {
   loading: false,
-  companies: [],
+  regions: [],
   pageInfo: initPageInfo,
   errorMsg: null,
 };
 
-const companiesReducer = (state = initialState, action: any) => {
+const regionsReducer = (state = initialState, action: any) => {
   switch (action.type) {
-    case companiesActionTypes.GET_COMPANIES_REQUEST:
+    case regionsActionTypes.GET_REGIONS_REQUEST:
       return {
         ...state,
         loading: true,
         errorMsg: null,
       };
-    case companiesActionTypes.GET_COMPANIES_REQUEST_SUCCESS:
+    case regionsActionTypes.GET_REGIONS_REQUEST_SUCCESS:
       return {
         ...state,
         loading: false,
-        companies: action.payload.edges.map((item: any) => item.node),
+        regions: action.payload.edges.map((item: any) => item.node),
         pageInfo: action.payload.pageInfo,
         errorMsg: null,
       };
 
-    case companiesActionTypes.GET_MORECOMPANIES_REQUEST_SUCCESS:
+    case regionsActionTypes.GET_MOREREGIONS_REQUEST_SUCCESS:
       console.log(action.payload);
 
-      // Update pageInfo when concat companies array
+      // Update pageInfo when concat regions array
       const { pageInfo } = state;
       const updatedPageInfo = {
         ...pageInfo,
@@ -46,18 +46,18 @@ const companiesReducer = (state = initialState, action: any) => {
       return {
         ...state,
         loading: false,
-        companies: state.companies.concat(
+        regions: state.regions.concat(
           action.payload.edges.map((item: any) => item.node)
         ),
         pageInfo: updatedPageInfo,
         errorMsg: null,
       };
 
-    case companiesActionTypes.GET_COMPANIES_REQUEST_FAILED:
+    case regionsActionTypes.GET_REGIONS_REQUEST_FAILED:
       return {
         ...state,
         loading: false,
-        companies: [],
+        regions: [],
         pageInfo: initPageInfo,
         errorMsg: action.payload,
       };
@@ -66,4 +66,4 @@ const companiesReducer = (state = initialState, action: any) => {
   }
 };
 
-export default companiesReducer;
+export default regionsReducer;

@@ -1,0 +1,23 @@
+.sort {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: max-content;
+  margin-bottom: 4px;
+  cursor: pointer;
+
+  img {
+    width: 7px;
+  }
+  .up {
+    margin-bottom: -7px;
+    :nth-child(1) {
+      position: absolute;
+    }
+  }
+  .down {
+    :nth-child(1) {
+      position: absolute;
+    }
+  }
+}
